@@ -24,3 +24,15 @@ jobs:
 
       - name: Docker Push
         run: docker push ghcr.io/josephduffy/vapordocc-website:latest
+
+  trigger_update:
+    name: Trigger Update
+    needs:
+      - build_image
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Simulate Webhook
+        run: ./scripts/trigger-update-webhook.sh vapordocc "${{ secrets.UPDATE_CONTAINER_SECRET }}" "${{ secrets.UPDATE_CONTAINERS_HOOK_URL }}"
